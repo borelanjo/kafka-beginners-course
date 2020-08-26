@@ -15,7 +15,7 @@ public class ProducerWithCallbackDemo {
 
         KafkaProducer<String, String> producer = new KafkaProducer<>(getProperties());
 
-        for (int i = 0; i < 100000; i++) {
+        for (int i = 0; i < 100; i++) {
             sendHello(producer, i);
         }
 
@@ -25,7 +25,7 @@ public class ProducerWithCallbackDemo {
     }
 
     private static void sendHello(KafkaProducer<String, String> producer, int i) {
-        ProducerRecord<String, String> record = new ProducerRecord<>("first_topic", "name", String.format("Hello World %s", i));
+        ProducerRecord<String, String> record = new ProducerRecord<>("first_topic", String.format("id_%s", i), String.format("Nº %s", i));
 
         producer.send(record, new Callback() {
             @Override
