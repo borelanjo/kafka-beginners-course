@@ -27,6 +27,6 @@ docker-compose exec kafka kafka-topics --bootstrap-server localhost:9092 --topic
 ```
 
 - Criar um consumidor:
-```
+```bash
 docker-compose exec kafka kafka-console-consumer --bootstrap-server localhost:29092 --topic first_topic --group tutorial1 --property print.key=true --property key.separator='|' --from-beginning
 ```

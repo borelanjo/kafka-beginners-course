@@ -15,7 +15,17 @@ public class ProducerWithCallbackDemo {
 
         KafkaProducer<String, String> producer = new KafkaProducer<>(getProperties());
 
-        ProducerRecord<String, String> record = new ProducerRecord<>("first_topic", "name", "Hello World");
+        for (int i = 0; i < 100000; i++) {
+            sendHello(producer, i);
+        }
+
+
+        producer.flush();
+        producer.close();
+    }
+
+    private static void sendHello(KafkaProducer<String, String> producer, int i) {
+        ProducerRecord<String, String> record = new ProducerRecord<>("first_topic", "name", String.format("Hello World %s", i));
 
         producer.send(record, new Callback() {
             @Override
@@ -24,14 +34,16 @@ public class ProducerWithCallbackDemo {
                     logger.error("Ocorreu um erro", e);
                     return;
                 }
-                logger.info("Mensagem consumida");
+
+                logger.info(String.format("Topic: %s, Partition: %s, Offset: %s, Timestamp: %s",
+                        recordMetadata.topic(),
+                        recordMetadata.partition(),
+                        recordMetadata.offset(),
+                        recordMetadata.timestamp()));
 
 
             }
         });
-
-        producer.flush();
-        producer.close();
     }
 
     private static Properties getProperties() {
